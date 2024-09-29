@@ -95,8 +95,31 @@ WHERE
     b.year_of_publication > 2000
 GROUP BY 1,2,3
 HAVING AVG(r.book_rating) = 9.5;
-
-
+-----------  -----------
+SELECT isbn
+FROM books_schema.ratings
+WHERE
+ book_rating > 7 AND 
+ user_id IN (
+	SELECT user_id
+	FROM books_schema.users
+	WHERE country = 'usa' AND age > 16
+ );
+-----------   -----------
+SELECT book_title
+FROM books_schema.books2
+WHERE isbn IN
+ (
+	SELECT isbn 
+	FROM books_schema.ratings 
+	WHERE
+		book_rating > 7
+	AND user_id
+		IN (
+		SELECT user_id FROM books_schema.users
+		WHERE country = 'us' AND age > 16 
+	)
+ );
 /*
 -  The list of books that have a rating a greater or equal to 9.5.
 - Those rating were provided by users living in the US.
